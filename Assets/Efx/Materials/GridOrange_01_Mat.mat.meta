@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: db488336968438e4bae299b6be7b7f3d
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 259143
+  packageName: Multiplayer FPS Template
+  packageVersion: 1.1.1
+  assetPath: Assets/AlterunaFPS/Materials/GridOrange_01_Mat.mat
+  uploadId: 637707
