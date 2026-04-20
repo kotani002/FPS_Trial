@@ -54,5 +54,7 @@ public class HitDamage : MonoBehaviour
             yield return null; // 次のフレームまで待機
         }
         Destroy(hitDamage); // ダメージ表示オブジェクトを削除
+
+        //ここを追加したよ
     }
 }
