@@ -1,24 +1,37 @@
 using UnityEngine;
 using System;
 using Unity.VisualScripting;
+using Cinemachine;
 
 public class MouseInput : MonoBehaviour
 {
-    [SerializeField]
-    private GameObject target;
-    [SerializeField]
-    private ParticleSystem particle;
-    [SerializeField]
-    private float clickInterval = 0.5f; // クリック間隔
+    [Header("弾の速度")]
+    [SerializeField, Range(10, 100)]
+    private float bulletSpeed = 10f; // 弾の速度
+    [Header("長押しした際のクリック感覚")]
+    [SerializeField, Range(0, 10)]
+    private float clickInterval = 0.15f; // クリック間隔
     private float elapsed = 0f; // 経過時間
-    [SerializeField]
+    [Header("弾が当たる最大距離")]
+    [SerializeField, Range(0, 10)]
     private float maxDistance = 10.0f; // レイの最大距離
+    [Header("弾が出る時の音")]
     [SerializeField]
     private AudioClip audioClip; // クリック音
     [SerializeField]
     private AudioSource audioSource; // AudioSourceコンポーネント
 
-    // Update is called once per frame
+    [SerializeField]
+    private GameObject bullet = null;
+    [SerializeField]
+    private GameObject target;
+    [SerializeField]
+    private ParticleSystem particle;
+    [SerializeField]
+    private CinemachineImpulseSource cinemachineImpulseSource;
+    [SerializeField]
+    private ShotShaker shotShaker;
+
     void Update()
     {
         // 左クリックされた瞬間
@@ -32,39 +45,35 @@ public class MouseInput : MonoBehaviour
 
             elapsed -= clickInterval; // 経過時間をリセット
 
+            //bulletのインスタンスを生成する。
+            GameObject newBullet = Instantiate(bullet);
+            newBullet.transform.position = target.transform.position;
+            newBullet.transform.rotation = Quaternion.LookRotation(Camera.main.transform.forward);
+
             // AudioSourceコンポーネントを追加してクリック音を再生する
-            audioSource.clip = audioClip;
-            audioSource.time = 0.1f; // オフセット分の時間を設定
-            audioSource.Play();
-
-            // パーティクルシステムのインスタンスを生成する。
-            ParticleSystem newParticle = Instantiate(particle);
-
-            newParticle.gameObject.transform.position = target.transform.position;
-            // カメラが見ている方向にパーティクルを回転させる。
-            newParticle.gameObject.transform.rotation = Quaternion.LookRotation(Camera.main.transform.forward);
+            //SEPlay();
             
-            // パーティクルを発生させる。
-            newParticle.Play();
-            // インスタンス化したパーティクルシステムのGameObjectを5秒後に削除する。(任意)
-            // ※第一引数をnewParticleだけにするとコンポーネントしか削除されない。
-            Destroy(newParticle.gameObject, 1.0f);
+            // 補正
+            //newBullet.GetComponent<Rigidbody>().AddForce((newBullet.transform.forward + new Vector3(-0.01f, 0, 0)) * bulletSpeed, ForceMode.Impulse);
+            
+            // カメラを振動させる
+            //cinemachineImpulseSource.GenerateImpulse();
 
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-
-            if (Physics.Raycast(ray, out hit, maxDistance))
-            {
-                if (hit.collider.gameObject.tag == "Target")
-                {
-                    hit.collider.gameObject.GetComponent<HitDamage>().ViewHitDamage(10);
-                }
-            }
+            // オブジェクトを振動させる
+            //shotShaker.Shake();
         }
 
         if (Input.GetMouseButtonUp(0))
         {
             elapsed = clickInterval; // 経過時間をリセット
         }
+    }
+
+    private void SEPlay()
+    {
+        // AudioSourceコンポーネントを追加してクリック音を再生する
+        audioSource.clip = audioClip;
+        audioSource.time = 0.1f; // オフセット分の時間を設定
+        audioSource.Play();
     }
 }

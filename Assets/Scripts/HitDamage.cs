@@ -12,6 +12,9 @@ public class HitDamage : MonoBehaviour
     private float speed = 1.0f; // 移動速度
     private Transform cameraTransform;
 
+    // 弾が当たったらDamage表記
+    
+
     public void ViewHitDamage(int damage)
     {
         // ダメージ演出 表示時にコルーチンを起動。1秒かけて上に移動しながらフェードアウトさせる
@@ -54,7 +57,5 @@ public class HitDamage : MonoBehaviour
             yield return null; // 次のフレームまで待機
         }
         Destroy(hitDamage); // ダメージ表示オブジェクトを削除
-
-        //ここを追加したよ
     }
 }
